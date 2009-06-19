@@ -19,8 +19,8 @@ import crane
 
 def test_crane_builds_hello_world():
     build_script = """
-    test:
-        show 'hello world'
+test
+    show 'hello world'
     """
 
     runner = crane.Runner()
