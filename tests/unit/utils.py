@@ -55,7 +55,7 @@ def assert_raises(exception, callable, *args, **kwargs):
         if exc_pattern is not None:
             assert exc_pattern.search(str(exc)), \
                             "%s raised %s, but the exception "\
-                            "does not match '%s': %r"\
+                            "does not match \n\nExpected: '%s'\nActual:   %r"\
                             % (callsig, exc.__class__, exc_pattern.pattern, str(exc))
     except:
         exc_info = sys.exc_info()

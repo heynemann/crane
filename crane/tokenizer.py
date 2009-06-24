@@ -21,11 +21,14 @@ class Tokenizer(object):
     @classmethod
     def tokenize(cls, script):
         tokens = []
+        non_indented_tokens = []
         
         indent_level = 0
         line_index = 0
         for line in script.splitlines():
             line_index += 1
+            if not line.strip(): 
+                continue
             line_indent_level = cls.get_indent_level(line)
             
             if line_indent_level > indent_level:
@@ -37,11 +40,21 @@ class Tokenizer(object):
 
             target = cls.get_target(line)
             if target:
-                if tokens and isinstance(tokens[-1], TargetToken):
-                    cls.raise_invalid_target_tokenize_error(line_index, line, tokens[-1])
+                if non_indented_tokens and isinstance(non_indented_tokens[-1], TargetToken):
+                    cls.raise_invalid_target_tokenize_error(line_index, line, non_indented_tokens[-1])
                 tokens.append(target)
+                non_indented_tokens.append(target)
                 continue
-
+            
+            if non_indented_tokens and isinstance(non_indented_tokens[-1], (TargetToken, ActionToken)):
+                action = ActionToken(line=line.strip())
+                tokens.append(action)
+                non_indented_tokens.append(action)
+                continue
+            
+            raise TokenizerError('An action("%s") was found when a TargetToken was expected in line %d.' %
+                                  (line.strip(), line_index))
+            
         return tuple(tokens)
 
     @classmethod
@@ -66,7 +79,7 @@ class Tokenizer(object):
     
     @classmethod
     def raise_invalid_target_tokenize_error(cls, line_index, line, token):
-        raise TokenizerError("A target was found when an ActionToken was excepted in line %d. TargetToken found after \"%s\" target." % (line_index, token.name))
+        raise TokenizerError("A target was found when an ActionToken was expected in line %d. TargetToken found after \"%s\" target." % (line_index, token.name))
         
 class Token(object):
     pass
@@ -82,7 +95,8 @@ class TargetToken(Token):
         self.name = name
 
 class ActionToken(Token):
-    pass
+    def __init__(self, line):
+        self.line = line
 
 class TokenizerError(Exception):
     pass
