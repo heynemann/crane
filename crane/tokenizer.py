@@ -23,7 +23,9 @@ class Tokenizer(object):
         tokens = []
         
         indent_level = 0
+        line_index = 0
         for line in script.splitlines():
+            line_index += 1
             line_indent_level = cls.get_indent_level(line)
             
             if line_indent_level > indent_level:
@@ -35,6 +37,8 @@ class Tokenizer(object):
 
             target = cls.get_target(line)
             if target:
+                if tokens and isinstance(tokens[-1], TargetToken):
+                    cls.raise_invalid_target_tokenize_error(line_index, line, tokens[-1])
                 tokens.append(target)
                 continue
 
@@ -59,6 +63,10 @@ class Tokenizer(object):
             return None
         
         return TargetToken(search.groups()[0])
+    
+    @classmethod
+    def raise_invalid_target_tokenize_error(cls, line_index, line, token):
+        raise TokenizerError("A target was found when an ActionToken was excepted in line %d. TargetToken found after \"%s\" target." % (line_index, token.name))
         
 class Token(object):
     pass
@@ -72,3 +80,9 @@ class DedentToken(Token):
 class TargetToken(Token):
     def __init__(self, name):
         self.name = name
+
+class ActionToken(Token):
+    pass
+
+class TokenizerError(Exception):
+    pass

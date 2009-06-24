@@ -16,7 +16,8 @@
 # limitations under the License.
 
 from crane import Tokenizer
-from crane.tokenizer import IndentToken, DedentToken, TargetToken
+from crane.tokenizer import IndentToken, DedentToken, TargetToken, TokenizerError
+from utils import assert_raises
 
 def test_tokenize_returns_a_tuple_of_tokens():
     tokens = Tokenizer.tokenize("")
@@ -45,4 +46,8 @@ def test_tokenize_returns_target_name_in_token():
     tokens = Tokenizer.tokenize("    on SomeTarget do")
     
     assert tokens[1].name == "SomeTarget"
-
+   
+def test_tokenize_raises_if_target_found_after_target():
+    script = """on SomeTarget do
+on AnotherTarget do"""
+    assert_raises(TokenizerError, Tokenizer.tokenize, script, exc_pattern=r'^A target was found when an ActionToken was excepted in line 2. TargetToken found after "SomeTarget" target.$')
