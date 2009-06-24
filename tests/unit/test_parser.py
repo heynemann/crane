@@ -15,8 +15,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane import Parser
+from crane import Parser, ParsedBuildStructure
+
+test_show_something_script = """
+on test do
+    show('something')
+    """
 
 def test_can_create_parser():
     parser = Parser()
     assert parser is not None
+    
+def test_parse_script_returns_ParsedBuildStructure():
+    parser = Parser()
+    result = parser.parse_script(test_show_something_script)
+    assert result
+
+def test_parse_script_returns_ParsedBuildStructure():
+    parser = Parser()
+    result = parser.parse_script(test_show_something_script)
+    assert isinstance(result, ParsedBuildStructure)
+
+def test_parsed_script_contains_one_target():
+    parser = Parser()
+    result = parser.parse_script(test_show_something_script)
+    #assert len(result.targets) == 1
+

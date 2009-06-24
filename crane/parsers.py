@@ -15,9 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from crane.tokenizer import Tokenizer
+
 class ParsedBuildStructure(object):
     def __init__(self):
         self.targets = {}
 
 class Parser(object):
-    pass
+    def parse_script(self, script):
+        structure = ParsedBuildStructure()
+        
+        tokens = Tokenizer.tokenize(script)
+
+        return structure

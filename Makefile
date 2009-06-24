@@ -68,12 +68,12 @@ compile:
 run_unit: compile
 	@echo "Running unit tests..."
 	@rm -f ${unit_log_file} >> /dev/null
-	@if [ "$(nocoverage)" = "true" ]; then nosetests --verbose ${unit_tests_dir}; else nosetests --verbose --with-coverage --cover-package=crane ${unit_tests_dir}; fi
+	@if [ "$(nocoverage)" = "true" ]; then nosetests -s --verbose ${unit_tests_dir}; else nosetests -s --verbose --with-coverage --cover-package=crane ${unit_tests_dir}; fi
 
 run_functional: compile
 	@echo "Running functional tests..."
 	@rm -f ${functional_log_file} >> /dev/null
-	@if [ "$(nocoverage)" = "true" ]; then nosetests --verbose ${functional_tests_dir}; else nosetests --verbose --with-coverage --cover-package=crane ${functional_tests_dir}; fi
+	@if [ "$(nocoverage)" = "true" ]; then nosetests -s --verbose ${functional_tests_dir}; else nosetests -s --verbose --with-coverage --cover-package=crane ${functional_tests_dir}; fi
 
 codeanalysis:
 	@echo "Generating code analysis..."
