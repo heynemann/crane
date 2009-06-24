@@ -19,7 +19,7 @@ import crane
 
 def test_crane_builds_hello_world():
     build_script = """
-test
+on test do
     show 'hello world'
     """
 

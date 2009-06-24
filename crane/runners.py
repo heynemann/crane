@@ -38,9 +38,6 @@ class TargetExecuter(object):
     def execute(self, target):
         pass
 
-class Target(object):
-    pass
-
 class RunResult(object):
     def __init__(self):
         self.log = ''

@@ -15,16 +15,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane.tokenizer import Tokenizer
+from crane.tokenizer import Tokenizer, TargetToken, ActionToken
+from crane.actions import Action
 
 class ParsedBuildStructure(object):
     def __init__(self):
         self.targets = {}
+    
+    def add_target(self, target_name):
+        target = Target(target_name)
+        self.targets[target_name] = target
+        
+class Target(object):
+    def __init__(self, name):
+        self.name = name
+        self.actions = []
+
+    def add_action(self, action_text):
+        action = Action(action_text)
+        self.targets.append(target)
 
 class Parser(object):
     def parse_script(self, script):
         structure = ParsedBuildStructure()
         
         tokens = Tokenizer.tokenize(script)
+
+        for token in tokens:
+            if isinstance(token, TargetToken):
+                current_target = structure.add_target(token.name)
 
         return structure

@@ -18,9 +18,14 @@
 from crane import Target
 
 def test_can_create_target():
-    target = Target()
+    target = Target("test")
     assert target is not None
 
 def test_created_target_is_Target():
-    target = Target()
+    target = Target("test")
     assert isinstance(target, Target)
+
+def test_created_target_has_no_actions():
+    target = Target("test")
+    assert len(target.actions) == 0
+
