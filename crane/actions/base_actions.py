@@ -15,17 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-from os.path import exists
-
 from crane.actions import ActionBase
-
-class ActualFileSystem():
-    def create_directory(self, path):
-        os.mkdir(path)
-    
-    def directory_exists(self, path):
-        return exists(path)
 
 class ShowAction(ActionBase):
     regex = "show ['\"](?P<text>.*)['\"]"
@@ -36,14 +26,23 @@ class ShowAction(ActionBase):
 class CreateDirectoryAction(ActionBase):
     regex = "create directory at (?P<directory_path>.*)"
     
-    def __init__(self, file_system=None):
-        self.file_system = file_system and file_system or ActualFileSystem()
-
     def execute(self, build_structure, directory_path):
         if self.file_system.directory_exists(directory_path):
             raise DirectoryAlreadyExistsError(directory_path)
         self.file_system.create_directory(directory_path)
         build_structure.log("Directory created at %s" % directory_path)
 
+class RemoveDirectoryAction(ActionBase):
+    regex = "remove directory at (?P<directory_path>.*)"
+    
+    def execute(self, build_structure, directory_path):
+        if not self.file_system.directory_exists(directory_path):
+            raise DirectoryNotFoundError(directory_path)
+        self.file_system.remove_directory(directory_path)
+        build_structure.log("Directory removed at %s" % directory_path)
+
 class DirectoryAlreadyExistsError(Exception):
+    pass
+
+class DirectoryNotFoundError(Exception):
     pass

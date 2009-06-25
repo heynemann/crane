@@ -18,7 +18,7 @@
 from pmock import *
 
 from crane.parsers import ParsedBuildStructure
-from crane.actions.base_actions import CreateDirectoryAction, DirectoryAlreadyExistsError
+from crane.actions.base_actions import *
 
 from ..utils import assert_raises
 
@@ -41,5 +41,14 @@ def test_create_directory_action_should_raise_if_directory_already_exists():
     
     action = CreateDirectoryAction(file_system=mock_file_system)
     assert_raises(DirectoryAlreadyExistsError, action.execute, structure, "/some/path",
+                   exc_pattern=r'/some/path')
+
+def test_remove_directory_action_should_raise_if_directory_does_not_exist():
+    mock_file_system = Mock()
+    mock_file_system.expects(once()).directory_exists(eq("/some/path")).will(return_value(False))
+    structure = ParsedBuildStructure()
+    
+    action = RemoveDirectoryAction(file_system=mock_file_system)
+    assert_raises(DirectoryNotFoundError, action.execute, structure, "/some/path",
                    exc_pattern=r'/some/path')
 

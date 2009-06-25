@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+from os.path import exists
 import re
 
 ACTIONS = []
@@ -67,9 +69,22 @@ class MetaActionBase(type):
 
         super(MetaActionBase, cls).__init__(name, bases, attrs)
 
+class ActualFileSystem():
+    def create_directory(self, path):
+        os.mkdir(path)
+
+    def remove_directory(self, path):
+        os.removedirs(path)
+    
+    def directory_exists(self, path):
+        return exists(path)
+
 class ActionBase(object):
     __metaclass__ = MetaActionBase
     failed = ActionFailedError
+
+    def __init__(self, file_system=None):
+        self.file_system = file_system and file_system or ActualFileSystem()
 
 #    def execute_action(self, line):
 #        Action, args, kwargs = ActionRegistry.suitable_for(line)

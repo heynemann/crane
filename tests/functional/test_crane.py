@@ -44,3 +44,18 @@ on test do
     
     assert exists(path)
     os.rmdir(path)
+
+def test_crane_remove_directory():
+    build_script = """
+on test do
+    create directory at %s
+    remove directory at %s"""
+    path = join(abspath(dirname(__file__)), 'some_folder')
+    build_script = build_script % (path, path)
+
+    runner = crane.Runner()
+
+    result = runner.run(script=build_script, target="test")
+    
+    assert not exists(path)
+
