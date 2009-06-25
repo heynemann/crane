@@ -30,15 +30,15 @@ class Runner(object):
         build_structure = self.parser.parse_script(script)
         actual_target = build_structure.targets[target]
 
-        result = self.executer.execute_target(actual_target)
+        result = self.executer.execute_target(build_structure, actual_target)
 
         return result
 
 class TargetExecuter(object):
-    def execute_target(self, target):
+    def execute_target(self, build_structure, target):
         for action_to_execute in target.actions:
             action_type = action_to_execute.action_type
-            action_type().execute(*action_to_execute.args, **action_to_execute.kw)
+            action_type().execute(build_structure, *action_to_execute.args, **action_to_execute.kw)
 
 class RunResult(object):
     def __init__(self):

@@ -59,3 +59,4 @@ def test_script_parser_raises_when_action_not_found():
     parser = Parser()
     
     assert_raises(ActionNotFoundError, parser.parse_script, test_dummy_script, exc_pattern=r'The action for the line \"dummy\" was not found. Are you sure you have that action right?')
+

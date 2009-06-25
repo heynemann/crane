@@ -28,10 +28,10 @@ def test_can_create_runner_with_given_parser():
 
 def test_run_script_returns_result():
     executer_mock = Mock()
-    executer_mock.expects(once()).execute_target(eq(None)).will(return_value(RunResult()))
+    parsed_build_structure = ParsedBuildStructure()
+    executer_mock.expects(once()).execute_target(eq(parsed_build_structure), eq(None)).will(return_value(RunResult()))
 
     parser_mock = Mock()
-    parsed_build_structure = ParsedBuildStructure()
     parsed_build_structure.targets["some target"] = None
     parser_mock.expects(once()).parse_script(eq("some script")).will(return_value(parsed_build_structure))
 
@@ -42,10 +42,10 @@ def test_run_script_returns_result():
 
 def test_run_script_returns_RunResult():
     executer_mock = Mock()
-    executer_mock.expects(once()).execute_target(eq(None)).will(return_value(RunResult()))
+    parsed_build_structure = ParsedBuildStructure()
+    executer_mock.expects(once()).execute_target(eq(parsed_build_structure), eq(None)).will(return_value(RunResult()))
 
     parser_mock = Mock()
-    parsed_build_structure = ParsedBuildStructure()
     parsed_build_structure.targets["some target"] = None
     parser_mock.expects(once()).parse_script(eq("some script")).will(return_value(parsed_build_structure))
 
@@ -65,7 +65,7 @@ def test_run_script_returns_proper_result():
     parsed_build_structure = ParsedBuildStructure()
     parsed_build_structure.targets["some target"] = mock_target
     parser_mock.expects(once()).parse_script(eq("some script")).will(return_value(parsed_build_structure))
-    executer_mock.expects(once()).execute_target(eq(mock_target)).will(return_value(some_result))
+    executer_mock.expects(once()).execute_target(eq(parsed_build_structure), eq(mock_target)).will(return_value(some_result))
 
     runner = Runner(parser=parser_mock, executer=executer_mock)
     result = runner.run("some script", "some target")
