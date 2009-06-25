@@ -15,10 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from crane.actions import ActionBase
+
+class ActualFileSystem():
+    def create_directory(self, path):
+        os.mkdir(path)
 
 class ShowAction(ActionBase):
     regex = "show ['\"](?P<text>.*)['\"]"
     
     def execute(self, build_structure, text):
         build_structure.log(text)
+
+class CreateDirectoryAction(ActionBase):
+    regex = "create directory ['\"](?P<directory_path>.*)['\"]"
+    
+    def __init__(self, file_system=None):
+        self.file_system = file_system and file_system or ActualFileSystem()
+
+    def execute(self, build_structure, directory_path):
+        self.file_system.create_directory(directory_path)
+        build_structure.log("Directory created at %s" % directory_path)
