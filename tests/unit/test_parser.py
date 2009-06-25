@@ -16,11 +16,25 @@
 # limitations under the License.
 
 from crane import Parser, ParsedBuildStructure
+from crane.actions import ActionNotFoundError, ActionBase
+
+from utils import assert_raises
 
 test_show_something_script = """
 on test do
     show('something')
     """
+
+test_dummy_script = """
+on test do
+    dummy
+    """
+
+class ShowAction(ActionBase):
+    regex = r"show\('(?P<message>\w+)'\)"
+
+    def execute(self, message):
+        print message
 
 def test_can_create_parser():
     parser = Parser()
@@ -39,5 +53,9 @@ def test_parse_script_returns_ParsedBuildStructure():
 def test_parsed_script_contains_one_target():
     parser = Parser()
     result = parser.parse_script(test_show_something_script)
-    #assert len(result.targets) == 1
+    assert len(result.targets) == 1
 
+def test_script_parser_raises_when_action_not_found():
+    parser = Parser()
+    
+    assert_raises(ActionNotFoundError, parser.parse_script, test_dummy_script, exc_pattern=r'The action for the line \"dummy\" was not found. Are you sure you have that action right?')

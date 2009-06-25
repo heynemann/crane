@@ -15,25 +15,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane.tokenizer import Tokenizer, TargetToken, ActionToken
-from crane.actions import Action
+from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
+from crane.actions import ActionBase, ActionRegistry, ActionNotFoundError
 
 class ParsedBuildStructure(object):
     def __init__(self):
         self.targets = {}
-    
-    def add_target(self, target_name):
-        target = Target(target_name)
-        self.targets[target_name] = target
+
+    def process_token(self, token):
+        target = Target(token.name)
+        self.targets[token.name] = target
+        return target
         
 class Target(object):
     def __init__(self, name):
         self.name = name
         self.actions = []
 
-    def add_action(self, action_text):
-        action = Action(action_text)
-        self.targets.append(target)
+    def process_token(self, token):
+        action_type, args, kw = ActionRegistry.suitable_for(token.line)
+        if not action_type:
+            raise ActionNotFoundError("The action for the line \"%s\" was not found. Are you sure you have that action right?" % token.line)
+
+        action = Action(action_type, args, kw)
+        self.actions.append(action)
+        return action
+
+class Action(object):
+    def __init__(self, action_type, args, kw):
+        self.action_type = action_type
+        self.args = args
+        self.kw = kw
 
 class Parser(object):
     def parse_script(self, script):
@@ -41,8 +53,19 @@ class Parser(object):
         
         tokens = Tokenizer.tokenize(script)
 
+        current_target = None
         for token in tokens:
+            if isinstance(token, (IndentToken, DedentToken)):
+                continue
+
             if isinstance(token, TargetToken):
-                current_target = structure.add_target(token.name)
+                current_target = structure.process_token(token)
+                continue
+
+            if isinstance(token, ActionToken):
+                current_action = current_target.process_token(token)
+                continue
 
         return structure
+
+

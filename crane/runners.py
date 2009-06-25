@@ -35,8 +35,10 @@ class Runner(object):
         return result
 
 class TargetExecuter(object):
-    def execute(self, target):
-        pass
+    def execute_target(self, target):
+        for action_to_execute in target.actions:
+            action_type = action_to_execute.action_type
+            action_type().execute(*action_to_execute.args, **action_to_execute.kw)
 
 class RunResult(object):
     def __init__(self):
