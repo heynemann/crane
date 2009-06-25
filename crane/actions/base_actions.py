@@ -30,7 +30,7 @@ class ShowAction(ActionBase):
         build_structure.log(text)
 
 class CreateDirectoryAction(ActionBase):
-    regex = "create directory ['\"](?P<directory_path>.*)['\"]"
+    regex = "create directory at (?P<directory_path>.*)"
     
     def __init__(self, file_system=None):
         self.file_system = file_system and file_system or ActualFileSystem()

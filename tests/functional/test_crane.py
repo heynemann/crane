@@ -15,6 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+from os.path import join, dirname, abspath, exists
+
 import crane
 
 def test_crane_builds_hello_world():
@@ -27,3 +30,17 @@ on test do
 
     result = runner.run(script=build_script, target="test")
     assert result.log.endswith("hello world")
+
+def test_crane_creates_directory():
+    build_script = """
+on test do
+    create directory at %s"""
+    path = join(abspath(dirname(__file__)), 'some_folder')
+    build_script = build_script % path
+
+    runner = crane.Runner()
+
+    result = runner.run(script=build_script, target="test")
+    
+    assert exists(path)
+    os.rmdir(path)
