@@ -63,6 +63,7 @@ def test_run_script_returns_proper_result():
     executer_mock = Mock()
     parser_mock = Mock()
     parsed_build_structure = ParsedBuildStructure()
+    parsed_build_structure.log_entries = ["some log"]
     parsed_build_structure.targets["some target"] = mock_target
     parser_mock.expects(once()).parse_script(eq("some script")).will(return_value(parsed_build_structure))
     executer_mock.expects(once()).execute_target(eq(parsed_build_structure), eq(mock_target)).will(return_value(some_result))
@@ -70,7 +71,8 @@ def test_run_script_returns_proper_result():
     runner = Runner(parser=parser_mock, executer=executer_mock)
     result = runner.run("some script", "some target")
 
-    assert result.log == "some log"
+    expected = "some log"
+    assert result.log == expected, "Expected: %s, Actual: %s" % (expected, result.log)
     assert result.status == Successful
     parser_mock.verify()
     mock_target.verify()

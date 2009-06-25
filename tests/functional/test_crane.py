@@ -26,4 +26,4 @@ on test do
     runner = crane.Runner()
 
     result = runner.run(script=build_script, target="test")
-    assert result.log == "hello world"
+    assert result.log.endswith("hello world")

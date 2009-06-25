@@ -15,11 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime
+
+from crane.parsers import Parser
+
 Successful = "Successful"
 Failed = "Failed"
 Unknown = "Unknown"
-
-from crane.parsers import Parser
 
 class Runner(object):
     def __init__(self, parser=None, executer=None):
@@ -31,14 +33,23 @@ class Runner(object):
         actual_target = build_structure.targets[target]
 
         result = self.executer.execute_target(build_structure, actual_target)
-
         return result
 
 class TargetExecuter(object):
     def execute_target(self, build_structure, target):
+        result = RunResult()
+
+        result.start_time = datetime.now()
+
         for action_to_execute in target.actions:
             action_type = action_to_execute.action_type
             action_type().execute(build_structure, *action_to_execute.args, **action_to_execute.kw)
+        
+        result.log = "\n".join([unicode(entry) for entry in build_structure.log_entries])
+        result.status = Successful
+        result.end_time = datetime.now()
+
+        return result
 
 class RunResult(object):
     def __init__(self):
