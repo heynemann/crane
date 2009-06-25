@@ -16,12 +16,16 @@
 # limitations under the License.
 
 import os
+from os.path import exists
 
 from crane.actions import ActionBase
 
 class ActualFileSystem():
     def create_directory(self, path):
         os.mkdir(path)
+    
+    def directory_exists(self, path):
+        return exists(path)
 
 class ShowAction(ActionBase):
     regex = "show ['\"](?P<text>.*)['\"]"
@@ -36,5 +40,10 @@ class CreateDirectoryAction(ActionBase):
         self.file_system = file_system and file_system or ActualFileSystem()
 
     def execute(self, build_structure, directory_path):
+        if self.file_system.directory_exists(directory_path):
+            raise DirectoryAlreadyExistsError(directory_path)
         self.file_system.create_directory(directory_path)
         build_structure.log("Directory created at %s" % directory_path)
+
+class DirectoryAlreadyExistsError(Exception):
+    pass
