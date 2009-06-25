@@ -20,26 +20,26 @@ from crane.actions import ActionBase
 class ShowAction(ActionBase):
     regex = "show ['\"](?P<text>.*)['\"]"
     
-    def execute(self, build_structure, text):
-        build_structure.log(text)
+    def execute(self, context, text):
+        context.log(text)
 
 class CreateDirectoryAction(ActionBase):
     regex = "create directory at (?P<directory_path>.*)"
     
-    def execute(self, build_structure, directory_path):
+    def execute(self, context, directory_path):
         if self.file_system.directory_exists(directory_path):
             raise DirectoryAlreadyExistsError(directory_path)
         self.file_system.create_directory(directory_path)
-        build_structure.log("Directory created at %s" % directory_path)
+        context.log("Directory created at %s" % directory_path)
 
 class RemoveDirectoryAction(ActionBase):
     regex = "remove directory at (?P<directory_path>.*)"
     
-    def execute(self, build_structure, directory_path):
+    def execute(self, context, directory_path):
         if not self.file_system.directory_exists(directory_path):
             raise DirectoryNotFoundError(directory_path)
         self.file_system.remove_directory(directory_path)
-        build_structure.log("Directory removed at %s" % directory_path)
+        context.log("Directory removed at %s" % directory_path)
 
 class DirectoryAlreadyExistsError(Exception):
     pass

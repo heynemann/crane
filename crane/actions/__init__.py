@@ -17,8 +17,10 @@
 # limitations under the License.
 
 import os
-from os.path import exists
+from os.path import exists, abspath
 import re
+
+from crane.actions.shell_executer import ShellExecuter, ExecuteResult
 
 ACTIONS = []
 
@@ -69,7 +71,10 @@ class MetaActionBase(type):
 
         super(MetaActionBase, cls).__init__(name, bases, attrs)
 
-class ActualFileSystem():
+class ActualFileSystem(object):
+    def __init__(self):
+        self.executer = ShellExecuter()
+
     def create_directory(self, path):
         os.mkdir(path)
 
@@ -85,6 +90,10 @@ class ActionBase(object):
 
     def __init__(self, file_system=None):
         self.file_system = file_system and file_system or ActualFileSystem()
+
+    def execute_shell(self, script, base_path=None):
+        base_path = base_path or abspath(os.curdir)
+        return self.file_system.executer.execute(script, base_path)
 
 #    def execute_action(self, line):
 #        Action, args, kwargs = ActionRegistry.suitable_for(line)

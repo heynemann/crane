@@ -19,30 +19,16 @@ from datetime import datetime
 
 from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
 from crane.actions import ActionBase, ActionRegistry, ActionNotFoundError
-
-class LogEntry(object):
-    def __init__(self, message):
-        self.timestamp = datetime.now()
-        self.message = message
-
-    def __str__(self):
-        return self.__unicode__()
-    
-    def __unicode__(self):
-        return "[%s] %s" % (self.timestamp, self.message)
+from crane.context import Context, LogEntry
 
 class ParsedBuildStructure(object):
     def __init__(self):
         self.targets = {}
-        self.log_entries = []
 
     def process_token(self, token):
         target = Target(token.name)
         self.targets[token.name] = target
         return target
-    
-    def log(self, message):
-        self.log_entries.append(LogEntry(message))
 
 class Target(object):
     def __init__(self, name):

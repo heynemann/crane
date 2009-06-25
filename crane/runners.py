@@ -18,6 +18,7 @@
 from datetime import datetime
 
 from crane.parsers import Parser
+from crane.context import Context, LogEntry
 
 Successful = "Successful"
 Failed = "Failed"
@@ -37,19 +38,19 @@ class Runner(object):
 
 class TargetExecuter(object):
     def execute_target(self, build_structure, target):
-        result = RunResult()
+        context = Context(RunResult(), build_structure)
 
-        result.start_time = datetime.now()
+        context.run_result.start_time = datetime.now()
 
         for action_to_execute in target.actions:
             action_type = action_to_execute.action_type
-            action_type().execute(build_structure, *action_to_execute.args, **action_to_execute.kw)
+            action_type().execute(context, *action_to_execute.args, **action_to_execute.kw)
         
-        result.log = "\n".join([unicode(entry) for entry in build_structure.log_entries])
-        result.status = Successful
-        result.end_time = datetime.now()
+        context.run_result.log = "\n".join([unicode(entry) for entry in context.log_entries])
+        context.run_result.status = Successful
+        context.run_result.end_time = datetime.now()
 
-        return result
+        return context
 
 class RunResult(object):
     def __init__(self):

@@ -15,7 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane import TargetExecuter
+from crane import TargetExecuter, Successful
+from crane.parsers import ParsedBuildStructure, Target
 
 def test_can_create_target_executer():
     executer = TargetExecuter()
@@ -24,3 +25,18 @@ def test_can_create_target_executer():
 def test_created_target_executer_is_TargetExecuter():
     executer = TargetExecuter()
     assert isinstance(executer, TargetExecuter)
+
+def test_target_executer_can_execute_target():
+    executer = TargetExecuter()
+    
+    structure = ParsedBuildStructure()
+    structure.targets["some"] = Target("some")
+    
+    context = executer.execute_target(structure, structure.targets["some"])
+
+    assert context
+    assert context.run_result
+    assert context.run_result.start_time
+    assert context.run_result.end_time
+    assert context.run_result.status == Successful
+

@@ -15,14 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane.parsers import ParsedBuildStructure
-from crane.actions.base_actions import ShowAction
-from crane.context import Context
+from datetime import datetime
 
-def test_show_action_execute_method_appends_text_to_build_structure():
-    context = Context(None, None)
-    action = ShowAction()
-    action.execute(context, "some text")
+class LogEntry(object):
+    def __init__(self, message):
+        self.timestamp = datetime.now()
+        self.message = message
+
+    def __str__(self):
+        return self.__unicode__()
     
-    assert len(context.log_entries) == 1
-    assert context.log_entries[0].message == "some text"
+    def __unicode__(self):
+        return "[%s] %s" % (self.timestamp, self.message)
+
+class Context(object):
+    def __init__(self, run_result=None, build_structure=None):
+        self.run_result = run_result
+        self.build_structure = build_structure
+        self.log_entries = []
+
+    def log(self, message):
+        self.log_entries.append(LogEntry(message))
+

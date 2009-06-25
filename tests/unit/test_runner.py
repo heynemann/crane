@@ -76,5 +76,4 @@ def test_run_script_returns_proper_result():
     assert result.status == Successful
     parser_mock.verify()
     mock_target.verify()
-    executer_mock.verify()
-
+    executer_mock.verify()    

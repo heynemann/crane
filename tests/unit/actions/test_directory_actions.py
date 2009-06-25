@@ -19,6 +19,7 @@ from pmock import *
 
 from crane.parsers import ParsedBuildStructure
 from crane.actions.base_actions import *
+from crane.context import Context, LogEntry
 
 from ..utils import assert_raises
 
@@ -26,29 +27,41 @@ def test_create_directory_action_should_call_create_directory():
     mock_file_system = Mock()
     mock_file_system.expects(once()).directory_exists(eq("/some/path")).will(return_value(False))
     mock_file_system.expects(once()).create_directory(eq("/some/path"))
-    structure = ParsedBuildStructure()
+    context = Context(None, None)
     
     action = CreateDirectoryAction(file_system=mock_file_system)
-    action.execute(structure, "/some/path")
+    action.execute(context, "/some/path")
     
-    assert len(structure.log_entries) == 1
-    assert structure.log_entries[0].message == "Directory created at /some/path"
+    assert len(context.log_entries) == 1
+    assert context.log_entries[0].message == "Directory created at /some/path"
 
 def test_create_directory_action_should_raise_if_directory_already_exists():
     mock_file_system = Mock()
     mock_file_system.expects(once()).directory_exists(eq("/some/path")).will(return_value(True))
-    structure = ParsedBuildStructure()
+    context = Context(None, None)
     
     action = CreateDirectoryAction(file_system=mock_file_system)
-    assert_raises(DirectoryAlreadyExistsError, action.execute, structure, "/some/path",
+    assert_raises(DirectoryAlreadyExistsError, action.execute, context, "/some/path",
                    exc_pattern=r'/some/path')
+
+def test_remove_directory_action_should_call_remove_directory():
+    mock_file_system = Mock()
+    mock_file_system.expects(once()).directory_exists(eq("/some/path")).will(return_value(True))
+    mock_file_system.expects(once()).remove_directory(eq("/some/path"))
+    context = Context(None, None)
+    
+    action = RemoveDirectoryAction(file_system=mock_file_system)
+    action.execute(context, "/some/path")
+    
+    assert len(context.log_entries) == 1
+    assert context.log_entries[0].message == "Directory removed at /some/path"
 
 def test_remove_directory_action_should_raise_if_directory_does_not_exist():
     mock_file_system = Mock()
     mock_file_system.expects(once()).directory_exists(eq("/some/path")).will(return_value(False))
-    structure = ParsedBuildStructure()
+    context = Context(None, None)
     
     action = RemoveDirectoryAction(file_system=mock_file_system)
-    assert_raises(DirectoryNotFoundError, action.execute, structure, "/some/path",
+    assert_raises(DirectoryNotFoundError, action.execute, context, "/some/path",
                    exc_pattern=r'/some/path')
 

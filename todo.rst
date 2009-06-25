@@ -1,0 +1,19 @@
+* Create at the base action a way to execute shell commands (result = self.execute_shell("ls -la") 
+            #result = (exit_code, run_log)
+
+* Allow to set Variables (set somevar to "x")
+* Allow users to use Variables (something like Show '$variable') - SLEEPY
+* Include another crane file (include xxx.crn)
+* Target dependency (on SomeTarget after AnotherTarget, SomeOtherTarget, TargetX do)
+* Execute shell script (execute "ls -la" command)
+* Allow actions to execute other actions (like Pyccuracy does)
+* Wait a given number of seconds (wait for x seconds)
+* Compile Python code (compile code at /home/dev)
+* Delete Files (remove *.zip files from /home/dev/xxx)
+* Copy files (copy *.zip files from /home/dev/xxx to /home/dev/yyy)
+* Rename file (rename file /home/dev/x.zip to /home/dev/y.zip)
+* Pyccuracy (run pyccuracy at /home/dev/tests with pt-br language ...)
+* Nose (run tests at /home/dev/tests (with coverage))
+* Code Analysis with sloccount (analyze code with sloccount at /home/dev/)
+* Fabric integration (run Fabric script at xxx.fab)
+

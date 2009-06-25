@@ -15,14 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane.parsers import ParsedBuildStructure
-from crane.actions.base_actions import ShowAction
-from crane.context import Context
 
-def test_show_action_execute_method_appends_text_to_build_structure():
-    context = Context(None, None)
-    action = ShowAction()
-    action.execute(context, "some text")
-    
-    assert len(context.log_entries) == 1
-    assert context.log_entries[0].message == "some text"

@@ -18,14 +18,29 @@
 import os
 from os.path import join, abspath, dirname, exists
 
+from crane.actions.base_actions import CreateDirectoryAction, RemoveDirectoryAction
+from crane.runners import RunResult
 from crane.parsers import ParsedBuildStructure
-from crane.actions.base_actions import CreateDirectoryAction
+from crane.context import Context, LogEntry
 
 def test_create_directory_actually_creates_a_directory():
-    structure = ParsedBuildStructure()
+    context = Context(RunResult(), ParsedBuildStructure())
     action = CreateDirectoryAction()
     path = join(abspath(dirname(__file__)), 'some_folder')
-    action.execute(structure, path)
+    action.execute(context, path)
     
     assert exists(path)
-    os.rmdir(path)
+    os.removedirs(path)
+
+def test_remove_directory_actually_removes_a_directory():
+    context = Context(RunResult(), ParsedBuildStructure())
+    action = RemoveDirectoryAction()
+    
+    path = join(abspath(dirname(__file__)), 'some_folder')
+    os.mkdir(path)
+    
+    assert exists(path)
+    
+    action.execute(context, path)
+    assert not exists(path)
+    
