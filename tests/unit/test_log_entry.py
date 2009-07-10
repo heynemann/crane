@@ -40,3 +40,7 @@ def test_created_log_entry_unicode_works():
     entry = LogEntry("message")
     assert re.match(r'^\[(.+)\] message$', unicode(entry))
 
+def test_created_log_entry_has_null_time_stamp_when_required():
+    entry = LogEntry("message", append_time=False)
+    assert entry.timestamp is None
+

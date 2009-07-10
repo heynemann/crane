@@ -18,9 +18,9 @@
 from datetime import datetime
 
 class LogEntry(object):
-    def __init__(self, message, append_time):
+    def __init__(self, message, append_time=True):
         if not append_time:
-            self.timestamp = ""
+            self.timestamp = None
         else:
             self.timestamp = datetime.now()
         self.message = message
