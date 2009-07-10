@@ -21,8 +21,8 @@ import sys
 import optparse
 import codecs
 
-from versioning import Version, Release
-from runners import Runner
+from crane.versioning import Version, Release
+from crane.runners import Runner
 
 __version_string__ = "crane %s (release '%s')" % (Version, Release)
 __docformat__ = 'restructuredtext en'

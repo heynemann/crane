@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..actions import ActionBase
+from crane.actions import ActionBase
 
 class ShowAction(ActionBase):
     regex = "show( ['\"](?P<text>.*)['\"])?"

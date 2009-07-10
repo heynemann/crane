@@ -17,8 +17,8 @@
 
 from datetime import datetime
 
-from parsers import Parser
-from context import Context, LogEntry
+from crane.parsers import Parser
+from crane.context import Context, LogEntry
 
 Successful = "Successful"
 Failed = "Failed"

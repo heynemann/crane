@@ -17,10 +17,10 @@
 
 from datetime import datetime
 
-from tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
-from actions import ActionBase, ActionRegistry, ActionNotFoundError
-from actions.base_actions import *
-from context import Context, LogEntry
+from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
+from crane.actions import ActionBase, ActionRegistry, ActionNotFoundError
+from crane.actions.base_actions import *
+from crane.context import Context, LogEntry
 
 class ParsedBuildStructure(object):
     def __init__(self):

@@ -30,7 +30,7 @@ class LogEntry(object):
     
     def __unicode__(self):
         if self.timestamp:
-            return "[%s] %s" % (self.timestamp, self.message)
+            return "[%s] %s" % (self.timestamp.strftime("%H:%M:%S"), self.message)
         return "%s" % self.message
 
 class Context(object):
