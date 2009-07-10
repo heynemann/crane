@@ -15,13 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from crane.actions import ActionBase
+from actions import ActionBase
 
 class ShowAction(ActionBase):
-    regex = "show ['\"](?P<text>.*)['\"]"
+    regex = "show( ['\"](?P<text>.*)['\"])?"
     
     def execute(self, context, text):
-        context.log(text)
+        if text:
+            context.log(text)
+        else:
+            context.log("", False)
 
 class CreateDirectoryAction(ActionBase):
     regex = "create directory at (?P<directory_path>.*)"

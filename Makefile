@@ -21,7 +21,6 @@ help:
 	@echo
 	@echo "    crane Makefile v${file_version}"
 	@echo "    usage: make <target>"
-	@echo
 	@echo "    targets:"
 	@echo "    help             displays this help text"
 	@echo "    all              compiles the code and runs all tests"

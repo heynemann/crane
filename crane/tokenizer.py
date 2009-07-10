@@ -29,6 +29,8 @@ class Tokenizer(object):
             line_index += 1
             if not line.strip(): 
                 continue
+            if line.strip().startswith("#-*-"):
+                continue
             line_indent_level = cls.get_indent_level(line)
             
             if line_indent_level > indent_level:

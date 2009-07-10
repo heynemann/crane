@@ -18,15 +18,20 @@
 from datetime import datetime
 
 class LogEntry(object):
-    def __init__(self, message):
-        self.timestamp = datetime.now()
+    def __init__(self, message, append_time):
+        if not append_time:
+            self.timestamp = ""
+        else:
+            self.timestamp = datetime.now()
         self.message = message
 
     def __str__(self):
         return self.__unicode__()
     
     def __unicode__(self):
-        return "[%s] %s" % (self.timestamp, self.message)
+        if self.timestamp:
+            return "[%s] %s" % (self.timestamp, self.message)
+        return "%s" % self.message
 
 class Context(object):
     def __init__(self, run_result=None, build_structure=None):
@@ -34,6 +39,6 @@ class Context(object):
         self.build_structure = build_structure
         self.log_entries = []
 
-    def log(self, message):
-        self.log_entries.append(LogEntry(message))
+    def log(self, message, append_time=True):
+        self.log_entries.append(LogEntry(message, append_time))
 

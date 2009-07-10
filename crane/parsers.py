@@ -17,9 +17,10 @@
 
 from datetime import datetime
 
-from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
-from crane.actions import ActionBase, ActionRegistry, ActionNotFoundError
-from crane.context import Context, LogEntry
+from tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
+from actions import ActionBase, ActionRegistry, ActionNotFoundError
+from actions.base_actions import *
+from context import Context, LogEntry
 
 class ParsedBuildStructure(object):
     def __init__(self):
@@ -27,7 +28,7 @@ class ParsedBuildStructure(object):
 
     def process_token(self, token):
         target = Target(token.name)
-        self.targets[token.name] = target
+        self.targets[token.name.lower()] = target
         return target
 
 class Target(object):

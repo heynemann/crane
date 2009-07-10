@@ -20,7 +20,7 @@ import os
 from os.path import exists, abspath
 import re
 
-from crane.actions.shell_executer import ShellExecuter, ExecuteResult
+from actions.shell_executer import ShellExecuter, ExecuteResult
 
 ACTIONS = []
 

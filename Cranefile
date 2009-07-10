@@ -1,0 +1,19 @@
+#-*- coding:utf-8 -*-
+
+on Help do
+    show
+	show "    crane Makefile v0.1.0"
+	show "    usage: make <target>"
+	show
+	show "    targets:"
+	show "    help             displays this help text"
+	show "    all              compiles the code and runs all tests"
+	show "    clean            cleans the build directory"
+	show "    compile          compiles the python code"
+	show "    test             runs all tests (unit and functional)"
+	show "    unit             runs all unit tests"
+	show "    functional       runs all functional tests"
+	show "    codeanalyis      generates code analysis info"
+	show "    sdist            creates a source-based distribution"
+	show "    deb              creates a debian-based distribution"
+	show
