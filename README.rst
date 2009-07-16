@@ -29,4 +29,4 @@ crane is named like that for two different reasons.
 
 The first one is that cranes are building blocks in civil engineering. The analogy is crystal clear.
 
-The second (and less known one) is that cranes are *awesome* birds, specially the Grey crowned crane (http://en.wikipedia.org/wiki/Crane_(bird)).
+The second (and less known one) is that cranes are *awesome* birds, specially the Grey crowned crane (http://en.wikipedia.org/wiki/Crane_(bird) ).
