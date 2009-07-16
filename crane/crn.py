@@ -81,6 +81,8 @@ def main():
 
 def print_results(result):
     print "Build result: %s" % result.status
+    print "Total run time: %.22f secs" % result.ellapsed
+    print
     print result.log
 
 if __name__ == "__main__":

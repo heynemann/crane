@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
 from datetime import datetime
 
 from crane.parsers import Parser, VariableAssignment
@@ -31,6 +32,7 @@ class Runner(object):
         self.verbosity = verbosity
 
     def run(self, script, target):
+        start_secs = time.time()
         build_structure = self.parser.parse_script(script)
         if target.lower() not in build_structure.targets:
             raise TargetNotFoundError(target)
@@ -48,7 +50,7 @@ class Runner(object):
         context.run_result.log = "\n".join([entry.render(self.verbosity) for entry in context.log_entries])
         context.run_result.status = Successful
         context.run_result.end_time = datetime.now()
-
+        context.run_result.ellapsed = time.time() - start_secs
         return context.run_result
 
 class TargetExecuter(object):
