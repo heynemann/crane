@@ -40,7 +40,7 @@ def main():
     parser = optparse.OptionParser(usage="%prog or type %prog -h (--help) for help", description=__doc__, version=__version_string__)
     parser.add_option("-f", "--file", dest="file", default=None, help="Build file. Defines which file will get executed [default: Cranefile].")
     parser.add_option("-d", "--dir", dest="dir", default=None, help="Directory to build from. Defines where to look for build files, actions and anything else [default: current dir].")
-    parser.add_option("-v", "--verbosity", dest="verbosity", default=2, help="Verbosity level. 0 for no log, 1 for no dates and 2 for full logging [default: 2].")
+    parser.add_option("-v", "--verbosity", dest="verbosity", default=1, help="Verbosity level. 0 for no log, 1 for no dates and 2 for full logging [default: 1].")
 
     options, args = parser.parse_args()
 
