@@ -21,6 +21,7 @@ import sys
 import optparse
 import codecs
 
+from crane.context import TargetNotFoundError
 from crane.versioning import Version, Release
 from crane.runners import Runner
 
@@ -56,15 +57,20 @@ def main():
         build_file_path = join(root_dir, options.file)
     else:
         build_file_path = join(root_dir, 'Cranefile')
-    
+
     if not exists(build_file_path):
         print "Build file not found at %s" % build_file_path
-        sys.exit(1)        
+        sys.exit(1)
 
     runner = Runner(verbosity=int(options.verbosity))
-    
+
     script = codecs.open(build_file_path, 'r', 'UTF-8').read()
-    result = runner.run(script, args[0]).run_result
+
+    try:
+        result = runner.run(script, args[0])
+    except TargetNotFoundError, err:
+        print "The target %s was not found!" % err
+        sys.exit(1)
 
     print_results(result)
     

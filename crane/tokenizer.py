@@ -24,7 +24,9 @@ class Tokenizer(object):
     def tokenize(cls, script):
         tokens = []
         non_indented_tokens = []
-        
+
+        script = script.replace("\t", "    ")
+
         indent_level = 0
         line_index = 0
         for line in script.splitlines():
@@ -34,7 +36,7 @@ class Tokenizer(object):
             if line.strip().startswith("#"):
                 continue
             line_indent_level = cls.get_indent_level(line)
-            
+
             if line_indent_level > indent_level:
                 indent_level = line_indent_level
                 tokens.append(IndentToken())

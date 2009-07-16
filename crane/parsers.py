@@ -24,6 +24,7 @@ from crane.context import Context, LogEntry
 
 class ParsedBuildStructure(object):
     def __init__(self):
+        self.variable_assignments = {}
         self.targets = {}
 
     def process_token(self, token):
@@ -35,6 +36,7 @@ class Target(object):
     def __init__(self, name):
         self.name = name
         self.actions = []
+        self.variable_assignments = {}
 
     def process_token(self, token):
         action_type, args, kw = ActionRegistry.suitable_for(token.line)
@@ -51,6 +53,11 @@ class Action(object):
         self.args = args
         self.kw = kw
 
+class VariableAssignment(object):
+    def __init__(self, variable, value):
+        self.variable = variable
+        self.value = value
+
 class Parser(object):
     def parse_script(self, script):
         structure = ParsedBuildStructure()
@@ -59,11 +66,18 @@ class Parser(object):
 
         current_target = None
         for token in tokens:
-            if isinstance(token, (IndentToken, DedentToken)):
+            if isinstance(token, IndentToken):
+                continue
+
+            if isinstance(token, DedentToken):
+                current_target = None
                 continue
 
             if isinstance(token, VariableAssignmentToken):
-                structure.variable_assignments[token.variable] = token
+                assignment = VariableAssignment(variable=token.variable, value=token.value)
+                if current_target:
+                    current_target.actions.append(assignment)
+                structure.variable_assignments[assignment.variable] = assignment
                 continue
 
             if isinstance(token, TargetToken):

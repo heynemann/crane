@@ -1,5 +1,7 @@
 #-*- coding:utf-8 -*-
 
+set hello_world to "Hello World"
+
 on Help do
     show
 	show "    crane Makefile v0.1.0"
@@ -17,3 +19,6 @@ on Help do
 	show "    sdist            creates a source-based distribution"
 	show "    deb              creates a debian-based distribution"
 	show
+
+on ShowVariables do
+    show $hello_world

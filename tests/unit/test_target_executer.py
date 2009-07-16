@@ -31,12 +31,5 @@ def test_target_executer_can_execute_target():
     
     structure = ParsedBuildStructure()
     structure.targets["some"] = Target("some")
-    
-    context = executer.execute_target(structure, structure.targets["some"], verbosity=2)
 
-    assert context
-    assert context.run_result
-    assert context.run_result.start_time
-    assert context.run_result.end_time
-    assert context.run_result.status == Successful
-
+    executer.execute_target(structure, structure.targets["some"], verbosity=2)

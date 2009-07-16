@@ -18,7 +18,7 @@
 from crane.actions import ActionBase
 
 class ShowAction(ActionBase):
-    regex = "show( ['\"](?P<text>.*)['\"])?"
+    regex = "show( ['\"]?(?P<text>.*)['\"]?)?"
     
     def execute(self, context, text):
         if text:

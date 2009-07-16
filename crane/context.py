@@ -41,7 +41,19 @@ class Context(object):
         self.run_result = run_result
         self.build_structure = build_structure
         self.log_entries = []
+        self.variables = {}
 
     def log(self, message, append_time=True):
         self.log_entries.append(LogEntry(message, append_time))
 
+    def assign_variable(self, variable, value):
+        self.variables[variable] = self.expand_variable(value)
+
+    def expand_variable(self, value):
+        for variable, value in self.variables.iteritems():
+            value = value.replace("$%s" % variable, value)
+
+        return value
+
+class TargetNotFoundError(ValueError):
+    pass

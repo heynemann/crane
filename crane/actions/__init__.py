@@ -95,6 +95,15 @@ class ActionBase(object):
         base_path = base_path or abspath(os.curdir)
         return self.file_system.executer.execute(script, base_path)
 
+    def execute_action(self, context, *args, **kw):
+        for i in range(len(args)):
+            args[i] = context.expand_variable(args[i])
+
+        for k, v in kw.iteritems():
+            kw[k] = context.expand_variable(kw[k])
+
+        return self.execute(context, *args, **kw)
+
 #    def execute_action(self, line):
 #        Action, args, kwargs = ActionRegistry.suitable_for(line)
 
