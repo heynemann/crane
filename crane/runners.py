@@ -55,7 +55,8 @@ class TargetExecuter(object):
     def execute_target(self, build_structure, target, context):
         for action_to_execute in target.actions:
             if isinstance(action_to_execute, VariableAssignment):
-                context.assign_variable(action.variable, action.value)
+                context.assign_variable(action_to_execute.variable, action_to_execute.value)
+                continue
             action_type = action_to_execute.action_type
             action_type().execute_action(context, *action_to_execute.args, **action_to_execute.kw)
 

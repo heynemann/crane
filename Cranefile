@@ -21,4 +21,6 @@ on Help do
 	show
 
 on ShowVariables do
+    set inside_variable to "some other thing"
     show $hello_world
+    show $inside_variable

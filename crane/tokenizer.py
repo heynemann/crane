@@ -46,6 +46,7 @@ class Tokenizer(object):
 
             assignment = cls.get_variable_assignment(line)
             if assignment:
+                print assignment.variable
                 tokens.append(assignment)
                 non_indented_tokens.append(assignment)
                 continue
@@ -58,7 +59,7 @@ class Tokenizer(object):
                 non_indented_tokens.append(target)
                 continue
 
-            if non_indented_tokens and isinstance(non_indented_tokens[-1], (TargetToken, ActionToken)):
+            if non_indented_tokens and isinstance(non_indented_tokens[-1], (TargetToken, ActionToken, VariableAssignmentToken)):
                 action = ActionToken(line=line.strip())
                 tokens.append(action)
                 non_indented_tokens.append(action)
