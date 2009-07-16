@@ -45,7 +45,7 @@ class Runner(object):
         for variable, assignment in build_structure.variable_assignments.iteritems():
             context.assign_variable(assignment.variable, assignment.value)
 
-        self.executer.execute_target(build_structure, actual_target, context)
+        self.executer.execute_target(build_structure=build_structure, target=actual_target, context=context)
 
         context.run_result.log = "\n".join([entry.render(self.verbosity) for entry in context.log_entries])
         context.run_result.status = Successful

@@ -32,4 +32,4 @@ def test_target_executer_can_execute_target():
     structure = ParsedBuildStructure()
     structure.targets["some"] = Target("some")
 
-    executer.execute_target(structure, structure.targets["some"], verbosity=2)
+    executer.execute_target(structure, structure.targets["some"], None)
