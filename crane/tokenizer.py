@@ -17,6 +17,8 @@
 
 import re
 
+WORD_REGEX = '["\']?(?P<word>.*[^"\'])["\']?'
+
 class Tokenizer(object):
     @classmethod
     def tokenize(cls, script):
@@ -29,7 +31,7 @@ class Tokenizer(object):
             line_index += 1
             if not line.strip(): 
                 continue
-            if line.strip().startswith("#-*-"):
+            if line.strip().startswith("#"):
                 continue
             line_indent_level = cls.get_indent_level(line)
             
@@ -40,6 +42,12 @@ class Tokenizer(object):
                 indent_level = line_indent_level
                 tokens.append(DedentToken())
 
+            assignment = cls.get_variable_assignment(line)
+            if assignment:
+                tokens.append(assignment)
+                non_indented_tokens.append(assignment)
+                continue
+
             target = cls.get_target(line)
             if target:
                 if non_indented_tokens and isinstance(non_indented_tokens[-1], TargetToken):
@@ -47,7 +55,7 @@ class Tokenizer(object):
                 tokens.append(target)
                 non_indented_tokens.append(target)
                 continue
-            
+
             if non_indented_tokens and isinstance(non_indented_tokens[-1], (TargetToken, ActionToken)):
                 action = ActionToken(line=line.strip())
                 tokens.append(action)
@@ -63,22 +71,31 @@ class Tokenizer(object):
     def get_indent_level(cls, line):
         r = r'^(\s*)'
         match = re.match(r, line)
-        
-        if not match:
-            return 0
-        
+
         return len(match.groups()[0])
 
     @classmethod
     def get_target(cls, line):
         r = r'on (?P<target_name>\w+) do'
         search = re.search(r, line)
-        
+
         if not search:
             return None
-        
+
         return TargetToken(search.groups()[0])
-    
+
+    @classmethod
+    def get_variable_assignment(cls, line):
+        r = r'set (?P<variable_name>\w+) to %s' % WORD_REGEX
+
+        search = re.search(r, line)
+
+        if not search:
+            return None
+
+        d = search.groupdict()
+        return VariableAssignmentToken(d["variable_name"], d["word"])
+
     @classmethod
     def raise_invalid_target_tokenize_error(cls, line_index, line, token):
         raise TokenizerError("A target was found when an ActionToken was expected in line %d. TargetToken found after \"%s\" target." % (line_index, token.name))
@@ -99,6 +116,11 @@ class TargetToken(Token):
 class ActionToken(Token):
     def __init__(self, line):
         self.line = line
+
+class VariableAssignmentToken(Token):
+    def __init__(self, variable, value):
+        self.variable = variable
+        self.value = value
 
 class TokenizerError(Exception):
     pass

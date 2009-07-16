@@ -8,7 +8,7 @@ build_dir=${root_dir}/build
 src_dir=${root_dir}/crane
 
 tests_dir=${root_dir}/tests
-unit_tests_dir=${tests_dir}/unit
+unit_tests_dir=${tests_dir}/unit ${tests_dir}/unit/actions
 functional_tests_dir=${tests_dir}/functional
 
 compile_log_file=${build_dir}/compile.log

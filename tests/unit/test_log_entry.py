@@ -44,3 +44,15 @@ def test_created_log_entry_has_null_time_stamp_when_required():
     entry = LogEntry("message", append_time=False)
     assert entry.timestamp is None
 
+def test_created_log_entry_render_returns_timestamp_for_verbosity_greater_than_1():
+    entry = LogEntry("message")
+    assert re.match(r'^\[(.+)\] message$', entry.render(2))
+
+def test_created_log_entry_render_returns_no_timestamp_for_verbosity_lesser_than_2():
+    entry = LogEntry("message")
+    assert re.match(r'^message$', entry.render(1))
+
+def test_created_log_entry_render_returns_no_timestamp_for_verbosity_lesser_than_2():
+    entry = LogEntry("message")
+    assert re.match(r'^message$', entry.render(0))
+

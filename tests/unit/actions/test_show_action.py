@@ -27,7 +27,7 @@ def test_show_action_execute_method_appends_text_to_build_structure():
     assert len(context.log_entries) == 1
     assert context.log_entries[0].message == "some text"
 
-def test_show_action_execute_method_appends_newline_if_no_text():
+def test_show_action_execute_method_does_nothing_if_no_text():
     context = Context(None, None)
     action = ShowAction()
     action.execute(context, "")

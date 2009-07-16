@@ -1,8 +1,7 @@
-* Create at the base action a way to execute shell commands (result = self.execute_shell("ls -la") 
-            #result = (exit_code, run_log)
-
 * Allow to set Variables (set somevar to "x")
 * Allow users to use Variables (something like Show '$variable') - SLEEPY
+* Create at the base action a way to execute shell commands (result = self.execute_shell("ls -la") 
+            #result = (exit_code, run_log)
 * Include another crane file (include xxx.crn)
 * Target dependency (on SomeTarget after AnotherTarget, SomeOtherTarget, TargetX do)
 * Execute shell script (execute "ls -la" command)

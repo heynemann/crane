@@ -17,7 +17,7 @@
 
 from datetime import datetime
 
-from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken
+from crane.tokenizer import Tokenizer, TargetToken, ActionToken, IndentToken, DedentToken, VariableAssignmentToken
 from crane.actions import ActionBase, ActionRegistry, ActionNotFoundError
 from crane.actions.base_actions import *
 from crane.context import Context, LogEntry
@@ -60,6 +60,10 @@ class Parser(object):
         current_target = None
         for token in tokens:
             if isinstance(token, (IndentToken, DedentToken)):
+                continue
+
+            if isinstance(token, VariableAssignmentToken):
+                structure.variable_assignments[token.variable] = token
                 continue
 
             if isinstance(token, TargetToken):

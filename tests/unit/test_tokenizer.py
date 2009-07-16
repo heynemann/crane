@@ -16,7 +16,7 @@
 # limitations under the License.
 
 from crane import Tokenizer
-from crane.tokenizer import IndentToken, DedentToken, TargetToken, ActionToken, TokenizerError
+from crane.tokenizer import IndentToken, DedentToken, TargetToken, ActionToken, TokenizerError, VariableAssignmentToken
 from utils import assert_raises
 
 def test_tokenize_returns_a_tuple_of_tokens():
@@ -68,4 +68,38 @@ def test_tokenize_raises_if_action_specified_without_previous_target():
     script = """    show('bla')"""
     assert_raises(TokenizerError, Tokenizer.tokenize, script, exc_pattern='^An action\("show\(\'bla\'\)"\) was found when a TargetToken was expected in line 1.$')
 
+def test_tokenize_returns_one_token_for_variable_assignment():
+    script = """    set message to 'Hello World'"""
+    tokens = Tokenizer.tokenize(script)
+    assert len(tokens) == 2, "Expected %d, Got %d" % (2, len(tokens))
+
+def test_tokenize_returns_assign_variable_token():
+    script = """    set message to 'Hello World'"""
+    tokens = Tokenizer.tokenize(script)
+    assert isinstance(tokens[1], VariableAssignmentToken)
+
+def test_tokenize_returns_assign_variable_token_with_right_variable_name():
+    script = """    set message to 'Hello World'"""
+    tokens = Tokenizer.tokenize(script)
+    assert tokens[1].variable == "message"
+
+def test_tokenize_returns_assign_variable_token_with_right_value():
+    script = """    set message to 'Hello World'"""
+    tokens = Tokenizer.tokenize(script)
+    assert tokens[1].value == "Hello World", "Expected %s, Got %s" % ("Hello World", tokens[1].value)
+
+def test_tokenize_returns_assign_variable_token_with_right_value_when_quotes_used():
+    script = '''    set message to "Hello World"'''
+    tokens = Tokenizer.tokenize(script)
+    assert tokens[1].value == "Hello World", "Expected %s, Got %s" % ("Hello World", tokens[1].value)
+
+def test_tokenizer_ignores_encoding_header():
+    script = '''#-*- coding:utf-8 -*-'''
+    tokens = Tokenizer.tokenize(script)
+    assert not tokens
+
+def test_tokenizer_ignores_comments():
+    script = '''#blablabla'''
+    tokens = Tokenizer.tokenize(script)
+    assert not tokens
 

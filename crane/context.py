@@ -26,19 +26,15 @@ class LogEntry(object):
         self.message = message
 
     def __str__(self):
-        return self.__unicode__()
-    
+        return self.render(2)
+
     def __unicode__(self):
-        if self.timestamp:
-            return "[%s] %s" % (self.timestamp.strftime("%H:%M:%S"), self.message)
-        return "%s" % self.message
+        return self.render(2)
 
     def render(self, verbosity):
         if verbosity > 1 and self.timestamp:
             return "[%s] %s" % (self.timestamp.strftime("%H:%M:%S"), self.message)
-
         return "%s" % self.message
-
 
 class Context(object):
     def __init__(self, run_result=None, build_structure=None):
