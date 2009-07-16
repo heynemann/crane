@@ -22,5 +22,7 @@ on Help do
 
 on ShowVariables do
     set inside_variable to "some other thing"
+    set other_variable to "$inside_variable and $hello_world"
     show $hello_world
     show $inside_variable
+    show $other_variable

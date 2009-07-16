@@ -50,6 +50,8 @@ class Context(object):
         self.variables[variable] = self.expand_variable(value)
 
     def expand_variable(self, value):
+        if not value:
+            return value
         for k, v in self.variables.iteritems():
             value = value.replace("$%s" % k, v)
 

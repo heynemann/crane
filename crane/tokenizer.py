@@ -46,7 +46,6 @@ class Tokenizer(object):
 
             assignment = cls.get_variable_assignment(line)
             if assignment:
-                print assignment.variable
                 tokens.append(assignment)
                 non_indented_tokens.append(assignment)
                 continue
