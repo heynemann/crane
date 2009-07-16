@@ -33,6 +33,13 @@ class LogEntry(object):
             return "[%s] %s" % (self.timestamp.strftime("%H:%M:%S"), self.message)
         return "%s" % self.message
 
+    def render(self, verbosity):
+        if verbosity > 1 and self.timestamp:
+            return "[%s] %s" % (self.timestamp.strftime("%H:%M:%S"), self.message)
+
+        return "%s" % self.message
+
+
 class Context(object):
     def __init__(self, run_result=None, build_structure=None):
         self.run_result = run_result

@@ -38,6 +38,8 @@ def main():
 
     parser = optparse.OptionParser(usage="%prog or type %prog -h (--help) for help", description=__doc__, version=__version_string__)
     parser.add_option("-f", "--file", dest="file", default=None, help="Build file. Defines which file will get executed [default: Cranefile].")
+    parser.add_option("-d", "--dir", dest="dir", default=None, help="Directory to build from. Defines where to look for build files, actions and anything else [default: current dir].")
+    parser.add_option("-v", "--verbosity", dest="verbosity", default=2, help="Verbosity level. 0 for no log, 1 for no dates and 2 for full logging [default: 2].")
 
     options, args = parser.parse_args()
 
@@ -45,7 +47,10 @@ def main():
         show_usage(options, args)
         return
 
-    root_dir = abspath(os.curdir)
+    if options.dir:
+        root_dir = abspath(options.dir)
+    else:
+        root_dir = abspath(os.curdir)
 
     if options.file:
         build_file_path = join(root_dir, options.file)
@@ -56,7 +61,7 @@ def main():
         print "Build file not found at %s" % build_file_path
         sys.exit(1)        
 
-    runner = Runner()
+    runner = Runner(verbosity=int(options.verbosity))
     
     script = codecs.open(build_file_path, 'r', 'UTF-8').read()
     result = runner.run(script, args[0]).run_result

@@ -25,19 +25,20 @@ Failed = "Failed"
 Unknown = "Unknown"
 
 class Runner(object):
-    def __init__(self, parser=None, executer=None):
+    def __init__(self, verbosity=2, parser=None, executer=None):
         self.parser = parser or Parser()
         self.executer = executer or TargetExecuter()
+        self.verbosity = verbosity
 
     def run(self, script, target):
         build_structure = self.parser.parse_script(script)
         actual_target = build_structure.targets[target]
 
-        result = self.executer.execute_target(build_structure, actual_target)
+        result = self.executer.execute_target(build_structure, actual_target, self.verbosity)
         return result
 
 class TargetExecuter(object):
-    def execute_target(self, build_structure, target):
+    def execute_target(self, build_structure, target, verbosity):
         context = Context(RunResult(), build_structure)
 
         context.run_result.start_time = datetime.now()
@@ -45,8 +46,8 @@ class TargetExecuter(object):
         for action_to_execute in target.actions:
             action_type = action_to_execute.action_type
             action_type().execute(context, *action_to_execute.args, **action_to_execute.kw)
-        
-        context.run_result.log = "\n".join([unicode(entry) for entry in context.log_entries])
+
+        context.run_result.log = "\n".join([entry.render(verbosity) for entry in context.log_entries])
         context.run_result.status = Successful
         context.run_result.end_time = datetime.now()
 
