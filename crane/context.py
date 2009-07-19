@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
 from datetime import datetime
 
 class LogEntry(object):
@@ -53,7 +54,8 @@ class Context(object):
         if not value:
             return value
         for k, v in self.variables.iteritems():
-            value = value.replace("$%s" % k, v)
+            value = re.sub("(?P<white>([^$]|^))[$]{1,1}%s" % k, "\g<white>%s" % v, value)
+            value = value.replace("$$","$")
 
         return value
 

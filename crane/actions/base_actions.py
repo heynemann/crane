@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 from crane.actions import ActionBase
 
 class ShowAction(ActionBase):
@@ -25,6 +27,15 @@ class ShowAction(ActionBase):
             context.log(text)
         else:
             context.log("", False)
+
+class SleepAction(ActionBase):
+    regex = "sleep for (?P<timeout>\d+) seconds"
+    
+    def do_sleep(self, timeout):
+        time.sleep(timeout)
+    
+    def execute(self, context, timeout):
+        self.do_sleep(int(timeout))
 
 class CreateDirectoryAction(ActionBase):
     regex = "create directory at (?P<directory_path>.*)"

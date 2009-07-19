@@ -38,3 +38,41 @@ def test_context_keeps_track_of_parsed_build_structure():
     context = Context(build_structure="else")
     assert context.build_structure == "else"
 
+def test_context_can_expand_variable():
+    context = Context()
+    
+    context.variables["some"] = "value"
+    
+    expected = "just value"
+    actual = context.expand_variable("just $some") 
+    assert actual == expected, "Expected %s Actual %s" % (expected, actual)
+
+def test_context_does_not_expand_unknown_variables():
+    context = Context()
+    assert context.expand_variable("$some") == "$some"
+    
+def test_context_does_not_replace_variable_if_two_variable_signs_found():
+    context = Context()
+    context.variables["some"] = "value"
+    assert context.expand_variable("$$some") == "$some"
+    
+def test_context_returns_imediately_on_null_variable():
+    context = Context()
+    assert not context.expand_variable(None)
+
+def test_context_returns_imediately_on_null_variable():
+    context = Context()
+    assert not context.expand_variable("")
+
+def test_context_can_assign_a_new_variable():
+    context = Context()
+    context.assign_variable("some", "value")
+    assert "some" in context.variables
+    assert context.variables["some"] == "value"
+
+def test_context_assigns_variable_expanded():
+    context = Context()
+    context.assign_variable("some", "value")
+    context.assign_variable("other", "some $some")
+    assert context.variables["other"] == "some value"
+

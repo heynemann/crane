@@ -43,9 +43,8 @@ class Target(object):
         if not action_type:
             raise ActionNotFoundError("The action for the line \"%s\" was not found. Are you sure you have that action right?" % token.line)
 
-        action = Action(action_type, args, kw)
+        action = lambda context: action_type().execute_action(context, *args, **kw)
         self.actions.append(action)
-        return action
 
 class Action(object):
     def __init__(self, action_type, args, kw):
@@ -74,9 +73,13 @@ class Parser(object):
                 continue
 
             if isinstance(token, VariableAssignmentToken):
-                assignment = VariableAssignment(variable=token.variable, value=token.value)
                 if current_target:
+                    assignment = lambda context, token=token: context.assign_variable(token.variable, token.value)
+
                     current_target.actions.append(assignment)
+                    continue
+
+                assignment = VariableAssignment(variable=token.variable, value=token.value)
                 structure.variable_assignments[assignment.variable] = assignment
                 continue
 
@@ -85,7 +88,7 @@ class Parser(object):
                 continue
 
             if isinstance(token, ActionToken):
-                current_action = current_target.process_token(token)
+                current_target.process_token(token)
                 continue
 
         return structure
